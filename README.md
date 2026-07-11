@@ -9,7 +9,7 @@ Dieses kleine Projekt ist ein Umrechner für digitale Speichereinheiten. Man kan
 - Man wählt eine zweite Einheit (zum Beispiel GiB).
 - Die App zeigt sofort das Ergebnis.
 
-Es gibt auch einen Knopf, um die beiden Einheiten zu tauschen. Unten auf der Seite sieht man außerdem eine kleine Grafik, die zeigt, wie groß die Einheiten im Vergleich zueinander sind.
+Es gibt auch einen Knopf, um die beiden Einheiten zu tauschen.
 
 ## Verwendete Technologien
 
