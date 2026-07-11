@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Byte Converter</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    margin: 40px;
+  }
+  h1 {
+    font-size: 22px;
+  }
+  p {
+    font-size: 14px;
+  }
+  table {
+    margin-top: 20px;
+  }
+  td {
+    padding: 6px;
+  }
+  input, select {
+    font-size: 14px;
+    padding: 4px;
+  }
+  input[type=number], select {
+    width: 150px;
+  }
+  button {
+    margin-top: 10px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Byte Converter</h1>
+
+<table>
+  <tr>
+    <td>Wert:</td>
+    <td><input type="number" id="value" placeholder="z. B. 500" min="0" step="any"></td>
+  </tr>
+  <tr>
+    <td>Von:</td>
+    <td>
+      <select id="from-unit"></select>
+    </td>
+  </tr>
+  <tr>
+    <td>Nach:</td>
+    <td>
+      <select id="to-unit"></select>
+    </td>
+  </tr>
+  <tr>
+    <td>Ergebnis:</td>
+    <td><input type="text" id="result" readonly></td>
+  </tr>
+</table>
+
+<button id="swap-btn" type="button">Einheiten tauschen</button>
+
+<script>
+const UNITS = ["Bit", "Byte", "KiB", "MiB", "GiB", "TiB", "PiB"];
+
+const BITS = {
+  "Bit": 1,
+  "Byte": 8,
+  "KiB": 8 * 1024,
+  "MiB": 8 * 1024 ** 2,
+  "GiB": 8 * 1024 ** 3,
+  "TiB": 8 * 1024 ** 4,
+  "PiB": 8 * 1024 ** 5,
+};
+
+const fromSelect = document.getElementById("from-unit");
+const toSelect = document.getElementById("to-unit");
+const valueInput = document.getElementById("value");
+const resultInput = document.getElementById("result");
+
+function populateSelects() {
+  UNITS.forEach(u => {
+    const opt1 = document.createElement("option");
+    opt1.value = u;
+    opt1.textContent = u;
+    fromSelect.appendChild(opt1);
+
+    const opt2 = document.createElement("option");
+    opt2.value = u;
+    opt2.textContent = u;
+    toSelect.appendChild(opt2);
+  });
+  fromSelect.value = "MiB";
+  toSelect.value = "GiB";
+}
+
+function formatNumber(n) {
+  if (Number.isInteger(n)) {
+    return n.toLocaleString("de-DE");
+  }
+  return n.toLocaleString("de-DE", { maximumFractionDigits: 6 });
+}
+
+function convert() {
+  const raw = valueInput.value;
+  const fromU = fromSelect.value;
+  const toU = toSelect.value;
+
+  if (raw === "" || raw === null) {
+    resultInput.value = "";
+    return;
+  }
+
+  const val = parseFloat(raw);
+  if (isNaN(val)) {
+    resultInput.value = "";
+    return;
+  }
+
+  const totalBits = val * BITS[fromU];
+  const converted = totalBits / BITS[toU];
+
+  resultInput.value = `${formatNumber(converted)} ${toU}`;
+}
+
+function swap() {
+  const a = fromSelect.value;
+  const b = toSelect.value;
+  fromSelect.value = b;
+  toSelect.value = a;
+  convert();
+}
+
+populateSelects();
+valueInput.addEventListener("input", convert);
+fromSelect.addEventListener("change", convert);
+toSelect.addEventListener("change", convert);
+document.getElementById("swap-btn").addEventListener("click", swap);
+</script>
+
+</body>
+</html>
